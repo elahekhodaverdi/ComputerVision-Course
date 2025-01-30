@@ -204,21 +204,45 @@ class ColorizerApp(ctk.CTk):
 
     def process_video(self, file_path):
         """
-        Process a video frame by frame.
+        Process a video frame by frame and display the frame rate (FPS).
         Args:
             file_path (str): Path to the video file.
         """
         # Open the video file
         cap = cv2.VideoCapture(file_path)
+        if not cap.isOpened():
+            print("Error: Could not open video file.")
+            return
+
+        # Variables for FPS calculation
+        start_time = time.time()
+        frame_count = 0
+
         while self.running and cap.isOpened():
             # Read a frame from the video
             ret, frame = cap.read()
             if not ret:
                 break  # Exit the loop if no more frames are available
+
             # Process the frame (colorize it)
             self.process_frame(frame)
-            time.sleep(0.01)  # Add a small delay to control the processing speed
-        cap.release()  # Release the video capture object
+
+            # Increment frame count
+            frame_count += 1
+
+            # Calculate elapsed time
+            elapsed_time = time.time() - start_time
+
+            # Calculate and display FPS
+            if elapsed_time > 0:
+                fps = frame_count / elapsed_time
+                print(f"FPS: {fps:.2f}")  # Print FPS to the console
+
+            # Add a small delay to control the processing speed
+            # time.sleep(0.05)
+
+        # Release the video capture object
+        cap.release()
 
     def display_image_on_canvas(self, canvas, image):
         """
