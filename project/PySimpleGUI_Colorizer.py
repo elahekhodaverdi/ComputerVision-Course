@@ -36,6 +36,14 @@ def colorize_image(image):
     Returns:
         numpy.ndarray: Colorized image in BGR format.
     """
+
+    if len(image.shape) == 2 or image.shape[2] == 1:
+        gray = image  # Image is already grayscale
+    else:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
+
+    # Convert grayscale to BGR format (required for model processing)
+    image = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
     # Normalize the image to the range [0, 1]
     scaled = image.astype("float32") / 255.0
     # Convert the image from BGR to LAB color space
@@ -183,11 +191,13 @@ class ColorizerApp(ctk.CTk):
         Args:
             frame (numpy.ndarray): The input frame to process.
         """
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  
+        gray_frame = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)
         # Colorize the frame
-        colorized_frame = colorize_image(frame)
+        colorized_frame = colorize_image(gray_frame)
         # Display the original and colorized frames on the canvases
-        self.display_image_on_canvas(self.input_canvas, frame)
-        self.display_image_on_canvas(self.output_canvas, colorized_frame)
+        self.display_image_on_canvas(self.input_canvas, gray_frame)  # Display grayscale input
+        self.display_image_on_canvas(self.output_canvas, colorized_frame)  # Display colorized output
 
     def upload_video(self):
         """
