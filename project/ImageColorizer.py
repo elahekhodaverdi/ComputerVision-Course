@@ -246,7 +246,7 @@ class ColorizerApp(ctk.CTk):
             # Calculate and display FPS
             if elapsed_time > 0:
                 fps = frame_count / elapsed_time
-                print(f"FPS: {fps:.2f}")  # Print FPS to the console
+                # print(f"FPS: {fps:.2f}")  # Print FPS to the console
 
             # Add a small delay to control the processing speed
             # time.sleep(0.05)
